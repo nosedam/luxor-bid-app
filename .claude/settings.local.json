@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r \"prisma\\\\|drizzle\\\\|mongodb\\\\|postgresql\\\\|supabase\\\\|firebase\" /d/WorkSpace/luxor/app/luxor-app --include=*.json --include=*.ts --include=*.tsx)",
+      "Bash(find /d/WorkSpace/luxor/app/luxor-app -maxdepth 3 -not -path */node_modules/* -not -path */.next/* -not -path */.turbo/* -not -path */.git/* -type d)",
+      "Bash(grep -r \"prisma\\\\|@prisma\" /d/WorkSpace/luxor/app/luxor-app --include=*.json --include=*.ts --include=*.tsx --include=*.js)",
+      "Bash(grep -r \"auth\\\\|nextauth\\\\|clerk\\\\|supabase\" /d/WorkSpace/luxor/app/luxor-app --include=*.json --include=*.ts --include=*.tsx)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm --filter web typecheck)",
+      "Bash(ls d:/WorkSpace/luxor/app/luxor-app/.env*)",
+      "Bash(find /d/WorkSpace/luxor/app/luxor-app/apps/web/app/api -type f -name *)",
+      "Bash(cmd /c \"dir /a d:\\\\WorkSpace\\\\luxor\\\\app\\\\luxor-app\\\\.env 2>&1\")",
+      "Bash(npx prisma:*)",
+      "Bash(npm run:*)",
+      "Bash(pnpm --filter @workspace/db exec tsx --version)",
+      "Bash(pnpm db:generate)",
+      "Bash(docker compose:*)"
+    ]
+  }
+}

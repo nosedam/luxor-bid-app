@@ -1,0 +1,9 @@
+.git
+.gitignore
+.turbo
+node_modules
+**/node_modules
+**/.next
+apps/web/.env*
+**/*.md
+**/*.log

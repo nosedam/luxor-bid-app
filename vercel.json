@@ -1,0 +1,6 @@
+{
+  "buildCommand": "pnpm --filter @workspace/db exec prisma generate --schema=./prisma/schema.prisma && pnpm turbo build --filter=web",
+  "outputDirectory": "apps/web/.next",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "nextjs"
+}
