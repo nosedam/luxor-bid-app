@@ -160,7 +160,7 @@ export function CollectionCard({
           {collection.maxBid != null && (
             <span className="text-xs text-muted-foreground">top ${collection.maxBid.toFixed(2)}</span>
           )}
-          <span className="text-xs text-muted-foreground">{collection.stocks} stock</span>
+          <span className="text-xs text-muted-foreground">{collection.stocks} units</span>
           <span className="text-xs text-muted-foreground">{collection._count.bids} bids</span>
           {collection.status === "COMPLETED" && (
             <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-green-500/10 text-green-600">
