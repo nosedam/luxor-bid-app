@@ -7,6 +7,7 @@ interface Bid {
   price: number;
   status: "PENDING" | "ACCEPTED" | "REJECTED";
   userId: string;
+  createdAt: string;
   user: { id: string; name: string };
 }
 
@@ -39,7 +40,10 @@ export function BidItem({ bid, sessionUserId, isCollectionOwner, onEdit, onDelet
         )}
       </span>
 
-      <div className="flex gap-1 shrink-0">
+      <div className="flex items-center gap-2 shrink-0">
+        <span className="text-xs text-muted-foreground">
+          {new Date(bid.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+        </span>
         {isOwner && bid.status === "PENDING" && (
           <>
             <Button size="xs" variant="outline" onClick={() => onEdit(bid)}>Edit</Button>

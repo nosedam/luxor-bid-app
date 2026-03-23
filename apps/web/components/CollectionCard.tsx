@@ -11,6 +11,7 @@ interface Bid {
   price: number;
   status: "PENDING" | "ACCEPTED" | "REJECTED";
   userId: string;
+  createdAt: string;
   user: { id: string; name: string };
 }
 
@@ -50,15 +51,21 @@ export function CollectionCard({
 }: CollectionCardProps) {
   const [bids, setBids] = useState<Bid[]>([]);
   const [loadingBids, setLoadingBids] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
   const isOwner = collection.userId === sessionUserId;
+  const PAGE_LIMIT = 10;
 
   async function loadBids() {
     if (!isExpanded) {
       setLoadingBids(true);
       try {
-        const res = await fetch(`/api/adapters/bids?collectionId=${collection.id}&limit=50`);
+        const res = await fetch(`/api/adapters/bids?collectionId=${collection.id}&page=1&limit=${PAGE_LIMIT}`);
         const data = await res.json();
         setBids(data.data ?? []);
+        setPage(1);
+        setHasMore((data.page ?? 1) < (data.totalPages ?? 1));
       } finally {
         setLoadingBids(false);
       }
@@ -66,10 +73,26 @@ export function CollectionCard({
     onToggle();
   }
 
+  async function loadMore() {
+    const nextPage = page + 1;
+    setLoadingMore(true);
+    try {
+      const res = await fetch(`/api/adapters/bids?collectionId=${collection.id}&page=${nextPage}&limit=${PAGE_LIMIT}`);
+      const data = await res.json();
+      setBids((prev) => [...prev, ...(data.data ?? [])]);
+      setPage(nextPage);
+      setHasMore(nextPage < (data.totalPages ?? 1));
+    } finally {
+      setLoadingMore(false);
+    }
+  }
+
   async function refreshBids() {
-    const res = await fetch(`/api/adapters/bids?collectionId=${collection.id}&limit=50`);
+    const res = await fetch(`/api/adapters/bids?collectionId=${collection.id}&page=1&limit=${PAGE_LIMIT}`);
     const data = await res.json();
     setBids(data.data ?? []);
+    setPage(1);
+    setHasMore((data.page ?? 1) < (data.totalPages ?? 1));
     onRefresh();
   }
 
@@ -185,6 +208,17 @@ export function CollectionCard({
                   onReject={handleReject}
                 />
               ))}
+              {hasMore && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="mt-1 w-fit text-xs text-muted-foreground"
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                >
+                  {loadingMore ? "Loading..." : "Load more"}
+                </Button>
+              )}
               {sessionUserId && !isOwner && !myBid && (
                 <Button
                   size="sm"
