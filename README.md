@@ -52,6 +52,7 @@ This will:
 - Start a PostgreSQL 16 database
 - Build and start the Next.js app on port `3000`
 - Automatically run Prisma migrations on startup
+- Start a cron daemon that auto-closes collections at midnight (see [Cron Job](#cron-job))
 
 The app will be available at http://localhost:3000.
 
@@ -98,6 +99,26 @@ pnpm dev
 ```
 
 The app will be available at http://localhost:3000.
+
+---
+
+## Cron Job
+
+Collections can have an optional **close date**. Every day at midnight (container time) a cron job runs inside the Docker container that:
+
+1. Finds all `RUNNING` collections whose `closeDate` is today or earlier
+2. Accepts the highest `PENDING` bid on each — marking it `ACCEPTED`, rejecting all others, and setting the collection status to `COMPLETED`
+3. If a collection has no bids it is still marked `COMPLETED`
+
+The job is installed in the Docker image via `dcron` (Alpine's cron daemon). `entrypoint.sh` exports the container's environment variables so the job inherits `DATABASE_URL` and other secrets, then starts `crond` before launching Next.js.
+
+**Run the job manually** (outside of Docker, against the local `.env`):
+
+```bash
+pnpm --filter @workspace/db close-collections
+```
+
+The source is at [`packages/db/scripts/close-collections.ts`](packages/db/scripts/close-collections.ts).
 
 ---
 
@@ -150,6 +171,8 @@ luxor-app/
 │   │   │   ├── schema.prisma       # Database schema (User, Collection, Bid)
 │   │   │   ├── seed.ts             # Seed script
 │   │   │   └── migrations/         # Migration history
+│   │   ├── scripts/
+│   │   │   └── close-collections.ts# Cron script — auto-accepts top bid on closing collections
 │   │   └── src/index.ts            # Prisma client export
 │   ├── ui/                         # Shared component library (shadcn/ui)
 │   ├── eslint-config/              # Shared ESLint configuration
@@ -157,7 +180,7 @@ luxor-app/
 │
 ├── Dockerfile                      # Multi-stage production build
 ├── docker-compose.yml              # PostgreSQL + web service
-├── entrypoint.sh                   # Runs migrations then starts Next.js
+├── entrypoint.sh                   # Exports env, starts crond, runs migrations, starts Next.js
 └── turbo.json                      # Turborepo pipeline configuration
 ```
 
