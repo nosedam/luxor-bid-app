@@ -8,6 +8,8 @@
     "lint": "turbo lint",
     "format": "turbo format",
     "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "test:coverage": "turbo test:coverage",
     "db:migrate": "pnpm --filter @workspace/db db:migrate",
     "db:generate": "pnpm --filter @workspace/db db:generate",
     "db:push": "pnpm --filter @workspace/db db:push",
