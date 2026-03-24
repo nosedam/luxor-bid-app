@@ -25,6 +25,7 @@ CREATE TABLE "Collection" (
     "price" DOUBLE PRECISION NOT NULL,
     "userId" TEXT NOT NULL,
     "status" "CollectionStatus" NOT NULL DEFAULT 'RUNNING',
+    "closeDate" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deletedAt" TIMESTAMP(3),
 

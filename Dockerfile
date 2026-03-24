@@ -36,6 +36,8 @@ FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
+RUN apk add --no-cache dcron
+
 COPY --from=builder /app/node_modules              ./node_modules
 COPY --from=builder /app/packages                  ./packages
 COPY --from=builder /app/apps/web/.next            ./apps/web/.next
@@ -45,6 +47,11 @@ COPY --from=builder /app/apps/web/package.json     ./apps/web/package.json
 COPY --from=builder /app/apps/web/next.config.mjs  ./apps/web/next.config.mjs
 COPY --from=builder /app/package.json              ./
 COPY --from=builder /app/pnpm-workspace.yaml       ./
+
+# Cron job: close collections at midnight every day
+RUN mkdir -p /var/spool/cron/crontabs && \
+    echo "0 0 * * * . /app/.env.cron && cd /app && pnpm --filter @workspace/db close-collections >> /proc/1/fd/1 2>&1" \
+    > /var/spool/cron/crontabs/root
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

@@ -5,7 +5,7 @@ import { Button } from "@workspace/ui/components/button";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 interface CollectionModalProps {
-  existing?: { id: string; name: string; description: string; stocks: number; price: number; imageUrl: string | null };
+  existing?: { id: string; name: string; description: string; stocks: number; price: number; imageUrl: string | null; closeDate: string | null };
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -16,6 +16,7 @@ export function CollectionModal({ existing, onClose, onSuccess }: CollectionModa
     description: existing?.description ?? "",
     stocks: existing ? String(existing.stocks) : "",
     price: existing ? existing.price.toFixed(2) : "",
+    closeDate: existing?.closeDate ? existing.closeDate.slice(0, 10) : "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(existing?.imageUrl ?? null);
@@ -54,6 +55,7 @@ export function CollectionModal({ existing, onClose, onSuccess }: CollectionModa
         imageUrl,
         stocks: parseInt(form.stocks),
         price: parseFloat(form.price),
+        closeDate: form.closeDate ? new Date(form.closeDate).toISOString() : null,
       });
 
       const res = existing
@@ -150,6 +152,15 @@ export function CollectionModal({ existing, onClose, onSuccess }: CollectionModa
                 required
               />
             </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-muted-foreground w-24 shrink-0">Close Date</span>
+            <input
+              className="border border-border rounded-lg px-3 py-2 text-sm bg-background flex-1"
+              type="date"
+              value={form.closeDate}
+              onChange={(e) => setForm((p) => ({ ...p, closeDate: e.target.value }))}
+            />
           </div>
           {error && <p className="text-destructive text-xs">{error}</p>}
           <Button type="submit" disabled={uploading}>

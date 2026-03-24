@@ -47,7 +47,7 @@ export function MyCollections({ session, expandedId, setExpandedId, onBid }: Pro
               isExpanded={expandedId === col.id}
               onToggle={() => setExpandedId(expandedId === col.id ? null : col.id)}
               onBid={(collectionId, existingBid, onBidSuccess) =>
-                onBid(collectionId, col.name, col.price, existingBid, onBidSuccess)
+                onBid(collectionId, col.name, col.maxBid ?? col.price, existingBid, onBidSuccess)
               }
               onRefresh={fetchMyCollections}
               onEdit={() => setModalCollection(col)}

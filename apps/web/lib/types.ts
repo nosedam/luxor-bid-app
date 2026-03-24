@@ -10,6 +10,8 @@ export interface Collection {
   description: string;
   stocks: number;
   price: number;
+  status: "RUNNING" | "COMPLETED";
+  closeDate: string | null;
   userId: string;
   user: { id: string; name: string };
   _count: { bids: number };

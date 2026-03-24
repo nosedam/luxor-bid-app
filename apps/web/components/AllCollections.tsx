@@ -43,6 +43,7 @@ export function AllCollections({ session, search, expandedId, setExpandedId, onB
     params.set("cursor", allCursor);
     const res = await fetch(`/api/adapters/collections?${params}`);
     const data = await res.json();
+    setAllCollections((prev) => [...prev, ...(data.data ?? [])]);
     setAllCursor(data.nextCursor ?? null);
     setAllHasMore(!!data.nextCursor);
     setLoadingMore(false);
@@ -76,7 +77,7 @@ export function AllCollections({ session, search, expandedId, setExpandedId, onB
               isExpanded={expandedId === col.id}
               onToggle={() => setExpandedId(expandedId === col.id ? null : col.id)}
               onBid={(collectionId, existingBid, onBidSuccess) =>
-                onBid(collectionId, col.name, col.price, existingBid, onBidSuccess)
+                onBid(collectionId, col.name, col.maxBid ?? col.price, existingBid, onBidSuccess)
               }
               onRefresh={fetchAllCollections}
             />

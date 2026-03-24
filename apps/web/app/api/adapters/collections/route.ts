@@ -11,6 +11,7 @@ const createSchema = z.object({
   imageUrl: z.string().url().nullish(),
   stocks: z.number().int().positive(),
   price: z.number().positive(),
+  closeDate: z.string().datetime().nullish(),
 });
 
 export async function GET(request: NextRequest) {
@@ -41,7 +42,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const service = new CollectionService(new PrismaCollectionRepository());
-    const collection = await service.create(parsed.data, session.userId);
+    const { closeDate, ...rest } = parsed.data;
+    const collection = await service.create({ ...rest, closeDate: closeDate ? new Date(closeDate) : null }, session.userId);
     return NextResponse.json(collection, { status: 201 });
   } catch (err) {
     if (err instanceof AppError) return NextResponse.json({ error: err.message }, { status: err.statusCode });

@@ -28,6 +28,7 @@ model Collection {
   user        User              @relation(fields: [userId], references: [id])
   bids        Bid[]
   status      CollectionStatus  @default(RUNNING)
+  closeDate   DateTime?
   createdAt   DateTime          @default(now())
   deletedAt   DateTime?
 }

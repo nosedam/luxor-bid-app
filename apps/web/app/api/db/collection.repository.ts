@@ -63,6 +63,7 @@ export class PrismaCollectionRepository implements ICollectionRepository {
     imageUrl?: string | null;
     stocks: number;
     price: number;
+    closeDate?: Date | null;
     userId: string;
   }): Promise<CollectionWithRelations> {
     const { bids, ...c } = await prisma.collection.create({ data, include: withRelations }) as any;
@@ -71,7 +72,7 @@ export class PrismaCollectionRepository implements ICollectionRepository {
 
   async update(
     id: string,
-    data: Partial<{ name: string; description: string; imageUrl: string | null; stocks: number; price: number }>
+    data: Partial<{ name: string; description: string; imageUrl: string | null; stocks: number; price: number; closeDate: Date | null }>
   ): Promise<CollectionWithRelations> {
     const { bids, ...c } = await prisma.collection.update({ where: { id }, data, include: withRelations }) as any;
     return { ...c, maxBid: bids[0]?.price ?? null, myBid: null } as CollectionWithRelations;

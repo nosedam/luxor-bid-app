@@ -7,6 +7,7 @@ export interface Collection {
   price: number;
   userId: string;
   status: "RUNNING" | "COMPLETED";
+  closeDate: Date | null;
   createdAt: Date;
   deletedAt: Date | null;
 }

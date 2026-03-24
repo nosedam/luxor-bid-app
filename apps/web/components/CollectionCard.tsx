@@ -24,6 +24,7 @@ interface Collection {
   price: number;
   userId: string;
   status: "RUNNING" | "COMPLETED";
+  closeDate: string | null;
   user: { id: string; name: string };
   _count: { bids: number };
   maxBid: number | null;
@@ -162,6 +163,11 @@ export function CollectionCard({
           )}
           <span className="text-xs text-muted-foreground">{collection.stocks} units</span>
           <span className="text-xs text-muted-foreground">{collection._count.bids} bids</span>
+          {collection.closeDate && collection.status !== "COMPLETED" && (
+            <span className="text-xs text-muted-foreground">
+              closes {new Date(collection.closeDate).toLocaleDateString()}
+            </span>
+          )}
           {collection.status === "COMPLETED" && (
             <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-green-500/10 text-green-600">
               Completed

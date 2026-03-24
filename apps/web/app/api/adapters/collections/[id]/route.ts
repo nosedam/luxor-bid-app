@@ -11,6 +11,7 @@ const updateSchema = z.object({
   imageUrl: z.string().url().nullable().optional(),
   stocks: z.number().int().positive().optional(),
   price: z.number().positive().optional(),
+  closeDate: z.string().datetime().nullable().optional(),
 });
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -26,7 +27,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
   try {
     const service = new CollectionService(new PrismaCollectionRepository());
-    const collection = await service.update(id, parsed.data, session.userId);
+    const { closeDate, ...rest } = parsed.data;
+    const updateData = closeDate !== undefined
+      ? { ...rest, closeDate: closeDate ? new Date(closeDate) : null }
+      : rest;
+    const collection = await service.update(id, updateData, session.userId);
     return NextResponse.json(collection);
   } catch (err) {
     if (err instanceof AppError) return NextResponse.json({ error: err.message }, { status: err.statusCode });

@@ -14,7 +14,8 @@
       "Bash(npm run:*)",
       "Bash(pnpm --filter @workspace/db exec tsx --version)",
       "Bash(pnpm db:generate)",
-      "Bash(docker compose:*)"
+      "Bash(docker compose:*)",
+      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")"
     ]
   }
 }

@@ -10,7 +10,7 @@ export class CollectionService {
   }
 
   async create(
-    data: { name: string; description: string; imageUrl?: string | null; stocks: number; price: number },
+    data: { name: string; description: string; imageUrl?: string | null; stocks: number; price: number; closeDate?: Date | null },
     userId: string
   ): Promise<CollectionWithRelations> {
     return this.collectionRepo.create({ ...data, userId });
@@ -18,7 +18,7 @@ export class CollectionService {
 
   async update(
     id: string,
-    data: Partial<{ name: string; description: string; imageUrl: string | null; stocks: number; price: number }>,
+    data: Partial<{ name: string; description: string; imageUrl: string | null; stocks: number; price: number; closeDate: Date | null }>,
     userId: string
   ): Promise<CollectionWithRelations> {
     const collection = await this.collectionRepo.findById(id);
